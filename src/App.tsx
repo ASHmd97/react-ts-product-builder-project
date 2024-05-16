@@ -1,19 +1,12 @@
+import ProductCard from "./components/ProductCard";
+
 function App() {
   return (
-    <div className="grid grid-cols-2">
-      <div>
-        <h1 className="text-3xl font-bold underline text-red-500">
-          Hello world!
-        </h1>
-      </div>
-      <div>
-        <p className="text-3xl font-bold underline text-red-500">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolor iste
-          quam expedita, unde amet debitis! Labore nostrum voluptatem minus
-          dolores! Doloribus adipisci eaque architecto nisi illo commodi magni
-          eveniet dolor!
-        </p>
-      </div>
+    <div className="p-10 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2">
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
     </div>
   );
 }
