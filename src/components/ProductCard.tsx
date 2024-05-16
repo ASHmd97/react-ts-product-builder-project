@@ -1,4 +1,5 @@
 import { IProduct } from "../interfaces";
+import { txtSlicer } from "../utils/functions";
 import Button from "./ui/Button";
 import Image from "./ui/Image";
 
@@ -16,7 +17,7 @@ const ProductCard = ({ product }: IProps) => {
         className="rounded-md"
       />
       <h3 className="text-xl font-bold mt-2">{product.title}</h3>
-      <p className="text-gray-500">{product.description}</p>
+      <p className="text-gray-500">{txtSlicer(product.description, 80)}</p>
       <div className="flex gap-2 mt-2">
         <span className="w-4 h-4 bg-indigo-500 rounded-full"></span>
         <span className="w-4 h-4 bg-yellow-500 rounded-full"></span>
@@ -24,7 +25,9 @@ const ProductCard = ({ product }: IProps) => {
         <span className="w-4 h-4 bg-green-500 rounded-full"></span>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-xl font-semibold text-indigo-500">$350</span>
+        <span className="text-xl font-semibold text-indigo-500">
+          {`$${product.price}`}
+        </span>
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">{product.category.name}</span>
           <Image
