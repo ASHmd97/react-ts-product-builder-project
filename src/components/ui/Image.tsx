@@ -6,11 +6,7 @@ interface IProps {
 
 const Image = ({ imageURL, alt, className }: IProps) => {
   return (
-    <img
-      src={imageURL}
-      alt={alt}
-      className={`w-full object-cover ${className}`}
-    />
+    <img src={imageURL} alt={alt} className={`object-cover ${className}`} />
   );
 };
 
