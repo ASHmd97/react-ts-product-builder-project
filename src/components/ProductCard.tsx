@@ -10,14 +10,16 @@ interface IProps {
 
 const ProductCard = ({ product }: IProps) => {
   return (
-    <div className="border p-2  rounded-md max-w-96 mx-auto">
+    <div className="flex flex-col w-fit border p-2 rounded-md max-w-80 md:max-w-80 mx-auto md:mx-0 lg:mx-0">
       <Image
         imageURL={product.imageURL}
         alt={product.title}
-        className="rounded-md"
+        className="w-full h-52 object-fill rounded-md"
       />
-      <h3 className="text-xl font-bold mt-2">{product.title}</h3>
-      <p className="text-gray-500">{txtSlicer(product.description, 80)}</p>
+      <div className="flex flex-col h-32">
+        <h3 className="text-xl font-bold mt-2">{product.title}</h3>
+        <p className="text-gray-500">{txtSlicer(product.description, 50)}</p>
+      </div>
       <div className="flex gap-2 mt-2">
         <span className="w-4 h-4 bg-indigo-500 rounded-full"></span>
         <span className="w-4 h-4 bg-yellow-500 rounded-full"></span>
@@ -33,7 +35,7 @@ const ProductCard = ({ product }: IProps) => {
           <Image
             imageURL={product.category.imageURL}
             alt={product.category.name}
-            className="w-10 h-10 rounded-full"
+            className="w-10 h-10 object-cover rounded-full"
           />
         </div>
       </div>

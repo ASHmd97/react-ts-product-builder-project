@@ -5,9 +5,7 @@ interface IProps {
 }
 
 const Image = ({ imageURL, alt, className }: IProps) => {
-  return (
-    <img src={imageURL} alt={alt} className={`object-cover ${className}`} />
-  );
+  return <img src={imageURL} alt={alt} className={className} />;
 };
 
 export default Image;
