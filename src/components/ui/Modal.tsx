@@ -1,37 +1,22 @@
 import {
-  Button,
   Dialog,
   DialogPanel,
   DialogTitle,
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 interface IProps {
   tittle: string;
   children: ReactNode;
+  isOpen: boolean;
+  closeModal: () => void;
 }
 
-const Modal = ({ tittle, children }: IProps) => {
-  const [isOpen, setIsOpen] = useState(true);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
+const Modal = ({ isOpen, closeModal, tittle, children }: IProps) => {
   return (
     <>
-      <Button
-        onClick={openModal}
-        className="rounded-md bg-black/20 py-2 px-4 text-sm font-medium text-white focus:outline-none data-[hover]:bg-black/30 data-[focus]:outline-1 data-[focus]:outline-white">
-        Open dialog
-      </Button>
-
       <Transition appear show={isOpen}>
         <Dialog
           as="div"
@@ -50,7 +35,7 @@ const Modal = ({ tittle, children }: IProps) => {
                   {tittle && (
                     <DialogTitle
                       as="h3"
-                      className="text-base/7 font-medium text-white">
+                      className="text-base/7 font-medium text-black">
                       {tittle}
                     </DialogTitle>
                   )}

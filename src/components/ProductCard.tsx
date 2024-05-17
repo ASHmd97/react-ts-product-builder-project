@@ -40,8 +40,12 @@ const ProductCard = ({ product }: IProps) => {
         </div>
       </div>
       <div className="flex justify-between space-x-2 mt-2">
-        <Button className="text-xl bg-indigo-500 flex-1 p-2">Edit</Button>
-        <Button className="text-xl bg-red-500 flex-1 p-2">Remove</Button>
+        <Button className="text-lg bg-indigo-700 hover:bg-indigo-500 flex-1 p-1">
+          Edit
+        </Button>
+        <Button className="text-lg bg-red-600 hover:bg-red-500 flex-1 p-1">
+          Remove
+        </Button>
       </div>
     </div>
   );
