@@ -23,7 +23,7 @@ const Modal = ({ isOpen, closeModal, tittle, children }: IProps) => {
           className="relative z-10 focus:outline-none"
           onClose={closeModal}>
           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
+            <div className="flex min-h-full items-center justify-center p-4 backdrop-brightness-75 backdrop-blur-sm">
               <TransitionChild
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 transform-[scale(95%)]"
@@ -31,7 +31,7 @@ const Modal = ({ isOpen, closeModal, tittle, children }: IProps) => {
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100 transform-[scale(100%)]"
                 leaveTo="opacity-0 transform-[scale(95%)]">
-                <DialogPanel className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl">
+                <DialogPanel className="w-full max-w-md rounded-xl bg-white p-6  shadow-xl">
                   {tittle && (
                     <DialogTitle
                       as="h3"

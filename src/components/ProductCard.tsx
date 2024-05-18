@@ -3,7 +3,6 @@ import { txtSlicer } from "../utils/functions";
 import Button from "./ui/Button";
 import Image from "./ui/Image";
 
-/* eslint-disable no-empty-pattern */
 interface IProps {
   product: IProduct;
 }
@@ -40,7 +39,9 @@ const ProductCard = ({ product }: IProps) => {
         </div>
       </div>
       <div className="flex justify-between space-x-2 mt-2">
-        <Button className="text-lg bg-indigo-700 hover:bg-indigo-500 flex-1 p-1">
+        <Button
+          // onClick={openEditModal}
+          className="text-lg bg-indigo-700 hover:bg-indigo-500 flex-1 p-1">
           Edit
         </Button>
         <Button className="text-lg bg-red-600 hover:bg-red-500 flex-1 p-1">
