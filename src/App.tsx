@@ -3,7 +3,9 @@ import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
 import { formInputsList, productList } from "./data";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { IProduct } from "./interfaces";
+import { IErrors, IProduct } from "./interfaces";
+import { productValidation } from "./validation";
+import ErrorMessage from "./components/ui/ErrorMessage";
 
 function App() {
   // -------------------Default Values-------------------------
@@ -20,9 +22,17 @@ function App() {
     },
   };
 
+  const defaultErrors: IErrors = {
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+  };
+
   // -------------------State-----------------------------
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState<IProduct>(defaultProduct);
+  const [errorMessage, setErrorMessage] = useState<IErrors>(defaultErrors);
 
   // ------------------Handler--------------------------------
   const openModal = () => setIsOpen(true);
@@ -31,15 +41,28 @@ function App() {
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setProduct({ ...product, [name]: value });
+    setErrorMessage({ ...errorMessage, [name]: "" });
   };
   const cancelModalHandler = (): void => {
     setProduct(defaultProduct);
-    closeModal();
+    setErrorMessage(defaultErrors);
+    // closeModal();
   };
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log(product);
+    const errors = productValidation(product);
+    // check if there are any errors and display them
+    const hasErrors =
+      Object.values(errors).some((error) => error !== "") ||
+      Object.values(errors).every((error) => error !== "");
+
+    if (hasErrors) {
+      setErrorMessage({ ...defaultErrors, ...errors });
+      console.log("Form has errors");
+      return;
+    }
+    console.log("Form Submitted");
   };
 
   // -------------------------Rendering--------------------------
@@ -62,6 +85,9 @@ function App() {
           value={product[input.name]}
           onChange={onChangeHandler}
         />
+
+        {/* error message if invalid */}
+        <ErrorMessage message={errorMessage[input.name]} />
       </div>
     );
   });

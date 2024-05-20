@@ -13,6 +13,13 @@ export interface IProduct {
   };
 }
 
+export interface IErrors {
+  title: string;
+  description: string;
+  imageURL: string;
+  price: string;
+}
+
 export interface IFormInput {
   id: string;
   name: ProductNameTypes;

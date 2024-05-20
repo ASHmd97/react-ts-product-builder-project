@@ -1,4 +1,4 @@
-interface IProductValidation {
+export interface IProductValidation {
   title: string;
   description: string;
   imageURL: string;
@@ -19,7 +19,7 @@ interface IProductValidation {
  * @returns {string} errors.imageURL - Error message for the image URL, if invalid.
  * @returns {string} errors.price - Error message for the price, if invalid.
  */
-export const productValidation = (product: IProductValidation) => {
+export const productValidation = (product: IProductValidation): object => {
   const errors: IProductValidation = {
     title: "",
     description: "",
