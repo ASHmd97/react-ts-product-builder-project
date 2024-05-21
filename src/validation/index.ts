@@ -3,6 +3,7 @@ export interface IProductValidation {
   description: string;
   imageURL: string;
   price: string;
+  colors: string | string[];
 }
 
 /**
@@ -25,6 +26,7 @@ export const productValidation = (product: IProductValidation): object => {
     description: "",
     imageURL: "",
     price: "",
+    colors: "",
   };
 
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/.test(product.imageURL);
@@ -51,6 +53,10 @@ export const productValidation = (product: IProductValidation): object => {
 
   if (!product.price.trim() || isNaN(Number(product.price))) {
     errors.price = "Price is required and must be a valid number";
+  }
+
+  if (product.colors.length < 1) {
+    errors.colors = "Colors are required";
   }
 
   return errors;

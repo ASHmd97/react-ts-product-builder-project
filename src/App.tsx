@@ -31,6 +31,7 @@ function App() {
     description: "",
     imageURL: "",
     price: "",
+    colors: "",
   };
 
   // -------------------State-----------------------------
@@ -62,13 +63,19 @@ function App() {
   const onColorSelectHandler = (color: string) => {
     if (selectedColor.includes(color)) {
       setSelectedColor((prev) => prev.filter((c) => c !== color));
+      setProduct({
+        ...product,
+        colors: selectedColor.filter((c) => c !== color),
+      });
     } else {
       setSelectedColor((prev) => [...prev, color]);
+      setProduct({ ...product, colors: [...selectedColor, color] });
     }
   };
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    // validate product
     const errors = productValidation(product);
     // check if there are any errors and display them
     const hasErrors =
@@ -77,7 +84,7 @@ function App() {
 
     if (hasErrors) {
       setErrorMessage({ ...defaultErrors, ...errors });
-      console.log("Form has errors");
+      console.log("Form has errors", errors);
       return;
     }
 
@@ -169,7 +176,9 @@ function App() {
                 {selectedColorRender}
               </div>
             </div>
-          ) : null}
+          ) : (
+            <ErrorMessage message={errorMessage.colors} />
+          )}
 
           {/* select menu */}
           <SelectMenu

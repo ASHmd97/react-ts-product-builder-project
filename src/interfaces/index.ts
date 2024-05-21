@@ -18,6 +18,7 @@ export interface IErrors {
   description: string;
   imageURL: string;
   price: string;
+  colors: string;
 }
 
 export interface IFormInput {
