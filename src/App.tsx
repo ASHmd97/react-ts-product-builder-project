@@ -2,13 +2,14 @@ import { v4 as uuid } from "uuid";
 import { Button } from "@headlessui/react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
-import { colors, formInputsList, productList } from "./data";
+import { categories, colors, formInputsList, productList } from "./data";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { IErrors, IProduct } from "./interfaces";
+import { ICategory, IErrors, IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorMessage from "./components/ui/ErrorMessage";
 import ColorCircle from "./components/ui/ColorCircle";
 import ColorBox from "./components/ui/ColorBox";
+import SelectMenu from "./components/ui/SelectMenu";
 
 function App() {
   // -------------------Default Values-------------------------
@@ -33,11 +34,14 @@ function App() {
   };
 
   // -------------------State-----------------------------
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProduct);
   const [errorMessage, setErrorMessage] = useState<IErrors>(defaultErrors);
   const [selectedColor, setSelectedColor] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>(
+    categories[3]
+  );
 
   // ------------------Handler--------------------------------
   const openModal = () => setIsOpen(true);
@@ -48,10 +52,11 @@ function App() {
     setProduct({ ...product, [name]: value });
     setErrorMessage({ ...errorMessage, [name]: "" });
   };
-  const cancelModalHandler = (): void => {
+  const resetModalHandler = (): void => {
     setProduct(defaultProduct);
     setSelectedColor([]);
     setErrorMessage(defaultErrors);
+    setSelectedCategory(categories[3]);
   };
 
   const onColorSelectHandler = (color: string) => {
@@ -77,11 +82,20 @@ function App() {
     }
 
     setProducts((prev) => [
-      { ...product, id: uuid(), colors: selectedColor },
+      {
+        ...product,
+        id: uuid(),
+        colors: selectedColor,
+        category: {
+          name: selectedCategory.name,
+          imageURL: selectedCategory.imageURL,
+        },
+      },
       ...prev,
     ]);
     setProduct(defaultProduct);
     setSelectedColor([]);
+    setSelectedCategory(categories[3]);
     setErrorMessage(defaultErrors);
     closeModal();
     console.log("Form Submitted");
@@ -157,6 +171,12 @@ function App() {
             </div>
           ) : null}
 
+          {/* select menu */}
+          <SelectMenu
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
+
           {/* modal footer */}
           <div className="flex justify-between space-x-2 mt-2">
             <Button
@@ -166,7 +186,7 @@ function App() {
             </Button>
             <Button
               type="button"
-              onClick={cancelModalHandler}
+              onClick={resetModalHandler}
               className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-black">
               Remove
             </Button>
