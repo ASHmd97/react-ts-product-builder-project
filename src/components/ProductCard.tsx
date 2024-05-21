@@ -1,6 +1,7 @@
 import { IProduct } from "../interfaces";
 import { txtSlicer } from "../utils/functions";
 import Button from "./ui/Button";
+import ColorCircle from "./ui/ColorCircle";
 import Image from "./ui/Image";
 
 interface IProps {
@@ -15,16 +16,23 @@ const ProductCard = ({ product }: IProps) => {
         alt={product.title}
         className="w-full h-52 object-fill rounded-md"
       />
-      <div className="flex flex-col h-32">
-        <h3 className="text-xl font-bold mt-2">{product.title}</h3>
-        <p className="text-gray-500">{txtSlicer(product.description, 50)}</p>
+      <div className="flex flex-col">
+        <h3 className="text-xl font-bold mt-2 text-wrap">{product.title}</h3>
+        <p
+          className="text-gray-500 text-wrap"
+          style={{ maxHeight: "80px", textWrap: "wrap" }}>
+          {txtSlicer(product.description, 40)}
+        </p>
       </div>
-      <div className="flex gap-2 mt-2">
-        <span className="w-4 h-4 bg-indigo-500 rounded-full"></span>
-        <span className="w-4 h-4 bg-yellow-500 rounded-full"></span>
-        <span className="w-4 h-4 bg-red-500 rounded-full"></span>
-        <span className="w-4 h-4 bg-green-500 rounded-full"></span>
-      </div>
+
+      {product.colors ? (
+        <div className="flex gap-2 mt-2">
+          {product.colors.map((color) => (
+            <ColorCircle color={color} key={color} />
+          ))}
+        </div>
+      ) : null}
+
       <div className="flex justify-between items-center">
         <span className="text-xl font-semibold text-indigo-500">
           {`$${product.price}`}

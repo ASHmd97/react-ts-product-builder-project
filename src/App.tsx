@@ -1,11 +1,14 @@
+import { v4 as uuid } from "uuid";
 import { Button } from "@headlessui/react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
-import { formInputsList, productList } from "./data";
+import { colors, formInputsList, productList } from "./data";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { IErrors, IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorMessage from "./components/ui/ErrorMessage";
+import ColorCircle from "./components/ui/ColorCircle";
+import ColorBox from "./components/ui/ColorBox";
 
 function App() {
   // -------------------Default Values-------------------------
@@ -31,8 +34,10 @@ function App() {
 
   // -------------------State-----------------------------
   const [isOpen, setIsOpen] = useState(false);
+  const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProduct);
   const [errorMessage, setErrorMessage] = useState<IErrors>(defaultErrors);
+  const [selectedColor, setSelectedColor] = useState<string[]>([]);
 
   // ------------------Handler--------------------------------
   const openModal = () => setIsOpen(true);
@@ -45,8 +50,16 @@ function App() {
   };
   const cancelModalHandler = (): void => {
     setProduct(defaultProduct);
+    setSelectedColor([]);
     setErrorMessage(defaultErrors);
-    // closeModal();
+  };
+
+  const onColorSelectHandler = (color: string) => {
+    if (selectedColor.includes(color)) {
+      setSelectedColor((prev) => prev.filter((c) => c !== color));
+    } else {
+      setSelectedColor((prev) => [...prev, color]);
+    }
   };
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
@@ -62,18 +75,29 @@ function App() {
       console.log("Form has errors");
       return;
     }
+
+    setProducts((prev) => [
+      { ...product, id: uuid(), colors: selectedColor },
+      ...prev,
+    ]);
+    setProduct(defaultProduct);
+    setSelectedColor([]);
+    setErrorMessage(defaultErrors);
+    closeModal();
     console.log("Form Submitted");
   };
 
   // -------------------------Rendering--------------------------
-  const productListRender = productList.map((product) => {
+  const productListRender = products.map((product) => {
     return <ProductCard key={product.id} product={product} />;
   });
 
-  const formInputsRendering = formInputsList.map((input) => {
+  const formInputsRender = formInputsList.map((input) => {
     return (
       <div key={input.id} className="flex flex-col">
-        <label htmlFor={input.id} className="mb-1 text-gray-600">
+        <label
+          htmlFor={input.id}
+          className="text-sm mb-1 text-gray-600 font-semibold">
           {" "}
           {input.label}
         </label>
@@ -85,24 +109,55 @@ function App() {
           value={product[input.name]}
           onChange={onChangeHandler}
         />
-
-        {/* error message if invalid */}
         <ErrorMessage message={errorMessage[input.name]} />
       </div>
     );
   });
 
+  const colorCirclesRender = colors.map((color) => {
+    return (
+      <ColorCircle
+        color={color}
+        key={color}
+        className="cursor-pointer"
+        onClick={() => onColorSelectHandler(color)}
+      />
+    );
+  });
+
+  const selectedColorRender = selectedColor.map((color) => {
+    return <ColorBox color={color} key={color} />;
+  });
+  // -------------------------Return--------------------------
   return (
     <main className="App flex flex-col justify-center mx-auto items-center p-6">
       <Button
         onClick={openModal}
-        className=" bg-indigo-600 hover:bg-indigo-600 flex-1 p-2 items-center gap-2 rounded-md py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-indigo-500 data-[open]:bg-indigo-700 data-[focus]:outline-1 data-[focus]:outline-black">
+        className=" bg-indigo-600 hover:bg-indigo-600 flex-1 p-2 items-center gap-2 rounded-md py-2 px-4 text-lg font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-indigo-500 data-[open]:bg-indigo-700 data-[focus]:outline-1 data-[focus]:outline-black">
         Add Product
       </Button>
 
       <Modal isOpen={isOpen} closeModal={closeModal} tittle="ADD A NEW PRODUCT">
         <form onSubmit={submitHandler} className="flex flex-col space-y-3">
-          {formInputsRendering}
+          {/* modal inputs */}
+          {formInputsRender}
+
+          {/* color circles */}
+          <div className="flex gap-2 mt-2">{colorCirclesRender}</div>
+
+          {/* selected colors */}
+          {selectedColor.length > 0 ? (
+            <div>
+              <h6 className="text-gray-600 text-sm font-semibold">
+                Selected Colors
+              </h6>
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {selectedColorRender}
+              </div>
+            </div>
+          ) : null}
+
+          {/* modal footer */}
           <div className="flex justify-between space-x-2 mt-2">
             <Button
               type="submit"
@@ -118,6 +173,7 @@ function App() {
           </div>
         </form>
       </Modal>
+
       <div className=" flex justify-center">
         <div className="p-10 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 md:mx-0">
           {productListRender}
