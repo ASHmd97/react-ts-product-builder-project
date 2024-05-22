@@ -5,16 +5,15 @@ import { categories } from "../../data";
 import { ICategory } from "../../interfaces";
 
 interface IProps {
-    selectedCategory: ICategory;
-    setSelectedCategory: (category: ICategory) => void;
+  selectedCategory: { name: string; imageURL: string };
+  setSelectedCategory: (category: ICategory) => void;
 }
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const SelectMenu = ( { selectedCategory, setSelectedCategory }: IProps) => {
-
+const SelectMenu = ({ selectedCategory, setSelectedCategory }: IProps) => {
   return (
     <Listbox value={selectedCategory} onChange={setSelectedCategory}>
       {({ open }) => (
@@ -30,7 +29,9 @@ const SelectMenu = ( { selectedCategory, setSelectedCategory }: IProps) => {
                   alt=""
                   className="h-5 w-5 flex-shrink-0 rounded-full"
                 />
-                <span className="ml-3 block truncate">{selectedCategory.name}</span>
+                <span className="ml-3 block truncate">
+                  {selectedCategory.name}
+                </span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                 <ChevronUpDownIcon

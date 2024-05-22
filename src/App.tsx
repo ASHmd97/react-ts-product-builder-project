@@ -37,6 +37,8 @@ function App() {
   // -------------------State-----------------------------
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+  const [isRemoveOpen, setIsRemoveOpen] = useState<boolean>(false);
+
   const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProduct);
   const [productToEdit, setProductToEdit] = useState<IProduct>(defaultProduct);
@@ -48,16 +50,26 @@ function App() {
   );
 
   // ------------------Handler--------------------------------
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const openModal = () => {
+    setIsOpen(true);
+    setSelectedColor([]);
+  };
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   const openEditModal = () => {
-    // setSelectedColor(productToEdit.colors);
     setIsEditOpen(true);
   };
   const closeEditModal = () => {
     setIsEditOpen(false);
-    // setProductToEdit(defaultProduct);
+  };
+
+  const openRemoveModal = () => {
+    setIsRemoveOpen(true);
+  };
+  const closeRemoveModal = () => {
+    setIsRemoveOpen(false);
   };
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -80,15 +92,23 @@ function App() {
   };
 
   const onColorSelectHandler = (color: string) => {
-    if (selectedColor.includes(color)) {
+    if (
+      selectedColor.includes(color) ||
+      selectedColor.concat(product.colors).includes(color)
+    ) {
       setSelectedColor((prev) => prev.filter((c) => c !== color));
       setProduct({
         ...product,
         colors: selectedColor.filter((c) => c !== color),
       });
+      setProductToEdit({
+        ...productToEdit,
+        colors: selectedColor.filter((c) => c !== color),
+      });
     } else {
       setSelectedColor((prev) => [...prev, color]);
       setProduct({ ...product, colors: [...selectedColor, color] });
+      setProductToEdit({ ...productToEdit, colors: [...selectedColor, color] });
     }
   };
 
@@ -119,10 +139,6 @@ function App() {
       },
       ...prev,
     ]);
-    setProduct(defaultProduct);
-    setSelectedColor([]);
-    setSelectedCategory(categories[3]);
-    setErrorMessage(defaultErrors);
     closeModal();
     console.log("Form Submitted");
   };
@@ -143,7 +159,10 @@ function App() {
     }
 
     const productListEdited = [...products];
-    productListEdited[ProductToEditIdx] = productToEdit;
+    productListEdited[ProductToEditIdx] = {
+      ...productToEdit,
+      colors: selectedColor,
+    };
     setProducts(productListEdited);
 
     setProductToEdit(defaultProduct);
@@ -151,6 +170,13 @@ function App() {
     console.log("Edit Form Submitted");
   };
 
+  const submitRemoveHandler = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const productListEdited = [...products];
+    productListEdited.splice(ProductToEditIdx, 1);
+    setProducts(productListEdited);
+    closeRemoveModal();
+  };
   // -------------------------Rendering--------------------------
   const productListRender = products.map((product, idx: number) => {
     return (
@@ -159,6 +185,7 @@ function App() {
         product={product}
         setProductToEdit={setProductToEdit}
         openEditModal={openEditModal}
+        openRemoveModal={openRemoveModal}
         idx={idx}
         setProductToEditIdx={setProductToEditIdx}
       />
@@ -288,27 +315,31 @@ function App() {
           {formEditInputsRender}
 
           {/* color circles */}
-          {/* <div className="flex gap-2 mt-2">{colorCirclesRender}</div> */}
+          <div className="flex gap-2 mt-2">{colorCirclesRender}</div>
 
           {/* selected colors */}
-          {/* {selectedColor.length > 0 ? (
+          {selectedColor.concat(productToEdit.colors).length > 0 ? (
             <div>
               <h6 className="text-gray-600 text-sm font-semibold">
                 Selected Colors
               </h6>
               <div className="flex gap-2 mt-2 flex-wrap">
-                {selectedColorRender}
+                {productToEdit.colors.map((color) => {
+                  return <ColorBox color={color} key={color} />;
+                })}
               </div>
             </div>
           ) : (
             <ErrorMessage message={errorMessage.colors} />
-          )} */}
+          )}
 
           {/* select menu */}
-          {/* <SelectMenu
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-          /> */}
+          <SelectMenu
+            selectedCategory={productToEdit.category}
+            setSelectedCategory={(Value) =>
+              setProductToEdit({ ...productToEdit, category: Value })
+            }
+          />
 
           {/* modal footer */}
           <div className="flex justify-between space-x-2 mt-2">
@@ -322,6 +353,41 @@ function App() {
               onClick={resetModalHandler}
               className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-black">
               Remove
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Remove Modal */}
+      <Modal
+        isOpen={isRemoveOpen}
+        closeModal={closeRemoveModal}
+        tittle="Are you sure you want to remove this Product from your Store?">
+        <form
+          onSubmit={submitRemoveHandler}
+          className="flex flex-col space-y-3">
+          {/* modal body */}
+          <div>
+            <p className="text-sm font-semibold text-slate-400">
+              Deleting this product will remove it permanently from your
+              inventory. Any associated data, sales history, and other related
+              information will also be deleted. Please make sure this is the
+              intended action.
+            </p>
+          </div>
+
+          {/* modal footer */}
+          <div className="flex justify-between space-x-2 mt-2">
+            <Button
+              type="submit"
+              className=" bg-red-600 hover:bg-red-500 flex-1 p-2 items-center gap-2 rounded-md py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-red-500 data-[open]:bg-red-700 data-[focus]:outline-1 data-[focus]:outline-black">
+              Yes, Remove
+            </Button>
+            <Button
+              type="button"
+              onClick={closeRemoveModal}
+              className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-black">
+              Cancel
             </Button>
           </div>
         </form>

@@ -1,4 +1,3 @@
-
 import { IProduct } from "../interfaces";
 import { txtSlicer } from "../utils/functions";
 import Button from "./ui/Button";
@@ -9,13 +8,19 @@ interface IProps {
   product: IProduct;
   setProductToEdit: (product: IProduct) => void;
   openEditModal: () => void;
+  openRemoveModal: () => void;
   idx: number;
   setProductToEditIdx: (idx: number) => void;
 }
 
-const ProductCard = ({ product, setProductToEdit ,openEditModal ,idx, setProductToEditIdx}: IProps) => {
-
-
+const ProductCard = ({
+  product,
+  setProductToEdit,
+  openEditModal,
+  idx,
+  setProductToEditIdx,
+  openRemoveModal,
+}: IProps) => {
   // -------------------Handler-----------------------------
   function editHandler(): void {
     setProductToEdit(product);
@@ -23,8 +28,11 @@ const ProductCard = ({ product, setProductToEdit ,openEditModal ,idx, setProduct
     openEditModal();
   }
 
+  function removeHandler(): void {
+    setProductToEditIdx(idx);
+    openRemoveModal();
+  }
   // ------------------Render--------------------------------
-
 
   // ------------------Return--------------------------------
   return (
@@ -67,10 +75,13 @@ const ProductCard = ({ product, setProductToEdit ,openEditModal ,idx, setProduct
       <div className="flex justify-between space-x-2 mt-2">
         <Button
           // onClick={openEditModal}
-          className="text-lg bg-indigo-700 hover:bg-indigo-500 flex-1 p-1" onClick={editHandler}>
+          className="text-lg bg-indigo-700 hover:bg-indigo-500 flex-1 p-1"
+          onClick={editHandler}>
           Edit
         </Button>
-        <Button className="text-lg bg-red-600 hover:bg-red-500 flex-1 p-1">
+        <Button
+          className="text-lg bg-red-600 hover:bg-red-500 flex-1 p-1"
+          onClick={removeHandler}>
           Remove
         </Button>
       </div>
