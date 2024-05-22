@@ -178,7 +178,7 @@ function App() {
     closeEditModal();
     toast.success("Product Edited", {
       style: {
-        borderRadius: "10px",
+        borderRadius: "12px",
         background: "#333",
         color: "#fff",
       },
