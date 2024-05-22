@@ -141,7 +141,14 @@ function App() {
       ...prev,
     ]);
     closeModal();
-    toast.success("Product Added");
+    toast.success("Product Added", {
+      icon: "🥳",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
     console.log("Form Submitted");
   };
 
@@ -169,7 +176,13 @@ function App() {
 
     setProductToEdit(defaultProduct);
     closeEditModal();
-    toast.success("Product Edited");
+    toast.success("Product Edited", {
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
     console.log("Edit Form Submitted");
   };
 
@@ -179,7 +192,14 @@ function App() {
     productListEdited.splice(ProductToEditIdx, 1);
     setProducts(productListEdited);
     closeRemoveModal();
-    toast.success("Product Removed");
+    toast.success("Product Removed", {
+      icon: "👏",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
   };
   // -------------------------Rendering--------------------------
   const productListRender = products.map((product, idx: number) => {
