@@ -42,9 +42,9 @@ export const productValidation = (product: IProductValidation): object => {
   if (
     !product.description.trim() ||
     product.description.length < 10 ||
-    product.description.length > 200
+    product.description.length > 800
   ) {
-    errors.description = "Description must be between 10 and 200 characters";
+    errors.description = "Description must be between 10 and 800 characters";
   }
 
   if (!product.imageURL.trim() || !validUrl) {

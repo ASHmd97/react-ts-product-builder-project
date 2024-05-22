@@ -10,6 +10,7 @@ import ErrorMessage from "./components/ui/ErrorMessage";
 import ColorCircle from "./components/ui/ColorCircle";
 import ColorBox from "./components/ui/ColorBox";
 import SelectMenu from "./components/ui/SelectMenu";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   // -------------------Default Values-------------------------
@@ -140,6 +141,7 @@ function App() {
       ...prev,
     ]);
     closeModal();
+    toast.success("Product Added");
     console.log("Form Submitted");
   };
 
@@ -167,6 +169,7 @@ function App() {
 
     setProductToEdit(defaultProduct);
     closeEditModal();
+    toast.success("Product Edited");
     console.log("Edit Form Submitted");
   };
 
@@ -176,6 +179,7 @@ function App() {
     productListEdited.splice(ProductToEditIdx, 1);
     setProducts(productListEdited);
     closeRemoveModal();
+    toast.success("Product Removed");
   };
   // -------------------------Rendering--------------------------
   const productListRender = products.map((product, idx: number) => {
@@ -398,6 +402,8 @@ function App() {
           {productListRender}
         </div>
       </div>
+
+      <Toaster />
     </main>
   );
 }
