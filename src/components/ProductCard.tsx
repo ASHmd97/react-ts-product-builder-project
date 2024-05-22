@@ -1,3 +1,4 @@
+
 import { IProduct } from "../interfaces";
 import { txtSlicer } from "../utils/functions";
 import Button from "./ui/Button";
@@ -6,9 +7,26 @@ import Image from "./ui/Image";
 
 interface IProps {
   product: IProduct;
+  setProductToEdit: (product: IProduct) => void;
+  openEditModal: () => void;
+  idx: number;
+  setProductToEditIdx: (idx: number) => void;
 }
 
-const ProductCard = ({ product }: IProps) => {
+const ProductCard = ({ product, setProductToEdit ,openEditModal ,idx, setProductToEditIdx}: IProps) => {
+
+
+  // -------------------Handler-----------------------------
+  function editHandler(): void {
+    setProductToEdit(product);
+    setProductToEditIdx(idx);
+    openEditModal();
+  }
+
+  // ------------------Render--------------------------------
+
+
+  // ------------------Return--------------------------------
   return (
     <div className="flex flex-col w-fit border p-2 rounded-md max-w-80 md:max-w-80 mx-auto md:mx-0 lg:mx-0">
       <Image
@@ -49,7 +67,7 @@ const ProductCard = ({ product }: IProps) => {
       <div className="flex justify-between space-x-2 mt-2">
         <Button
           // onClick={openEditModal}
-          className="text-lg bg-indigo-700 hover:bg-indigo-500 flex-1 p-1">
+          className="text-lg bg-indigo-700 hover:bg-indigo-500 flex-1 p-1" onClick={editHandler}>
           Edit
         </Button>
         <Button className="text-lg bg-red-600 hover:bg-red-500 flex-1 p-1">
